@@ -27,6 +27,7 @@
                                 <th class="border border-[#5A827E] px-3 py-2 text-left">Batas Pinjam</th>
                                 <th class="border border-[#5A827E] px-3 py-2 text-left">Kode Koleksi</th>
                                 <th class="border border-[#5A827E] px-3 py-2 text-left">Judul</th>
+                                <th class="border border-[#5A827E] px-3 py-2 text-center">Status</th>
                                 <th class="border border-[#5A827E] px-3 py-2 text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -42,6 +43,7 @@
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->tgl_bts_kembali }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->kd_koleksi }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->koleksi->judul }}</td>
+                                    <td class="border border-[#cfe2df] px-3 py-2">{{ $d->status }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2 text-center space-x-2">
                                         <button
                                             onclick="updateData('{{ $d->id }}','{{ $d->kd_anggota }}','{{ $d->tg_pinjam }}','{{ $d->tgl_bts_kembali }}','{{ $d->kd_koleksi }}','{{ route('trsPinjam.update', $d->id) }}')"
@@ -155,6 +157,15 @@
                         @foreach ($koleksi as $k)
                             <option value="{{ $k->kd_koleksi }}">{{ $k->judul }}</option>
                         @endforeach
+                    </select>
+                </div>
+                <label for="status">Status</label>
+                <div class="relative w-full mb-2">
+                    <select name="status" id="status" required
+                        class="w-full px-4 py-2 rounded-md border border-[#5A827E] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#5A827E] hover:border-[#40615e] hover:bg-[#e6f0ee] dark:hover:bg-[#3b5956] transition">
+                        <option value="">Pilih...</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="APPROVED">Approved</option>
                     </select>
                 </div>
             `;

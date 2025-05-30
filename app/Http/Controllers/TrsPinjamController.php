@@ -52,6 +52,7 @@ class TrsPinjamController extends Controller
             'tg_pinjam' => $request->input('tgl_pinjam'),
             'tgl_bts_kembali' => $request->input('tgl_bts_kembali'),
             'kd_koleksi' => $request->input('kd_koleksi'),
+            'status' => $request->input('status'),
             'id_pengguna' => Auth::user()->id,
         ];
         TrsPinjam::create($data);
@@ -113,6 +114,7 @@ class TrsPinjamController extends Controller
             'tgl_bts_kembali' => $request->input('tgl_bts_kembali'),
             'kd_koleksi' => $request->input('kd_koleksi'),
             'id_pengguna' => Auth::user()->id,
+            'status' => $request->input('status'),
         ];
 
         $datas->update($data);

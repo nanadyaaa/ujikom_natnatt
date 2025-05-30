@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('tgl_bts_kembali');
             $table->string('kd_koleksi');
             $table->integer('id_pengguna');
+            $table->enum('status', ['pending', 'approved'])->default('pending');
             $table->timestamps();
         });
     }

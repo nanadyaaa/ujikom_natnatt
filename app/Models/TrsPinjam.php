@@ -15,6 +15,7 @@ class TrsPinjam extends Model
         'tgl_bts_kembali',
         'kd_koleksi',
         'id_pengguna',
+        'status',
     ];
 
     protected $table = 'trs_pinjam';
