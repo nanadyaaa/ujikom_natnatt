@@ -14,6 +14,7 @@ class Anggota extends Model
         'jk',
         'alamat',
         'status',
+        'role_id',
         'jml_pinjam',
     ];
 
@@ -31,4 +32,8 @@ class Anggota extends Model
     {
         return $this->hasMany(TrsPinjam::class, 'kd_anggota');
     }
+    public function role()
+{
+    return $this->belongsTo(Role::class, 'role_id', 'id');
+}
 }

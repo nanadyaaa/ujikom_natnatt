@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class AnggotaSeeder extends Seeder
 {
+    
     /**
      * Run the database seeds.
      */
@@ -20,6 +21,7 @@ class AnggotaSeeder extends Seeder
                 'jk' => 'P',
                 'alamat' => 'BANJAR',
                 'status' => 'AKTIF',
+                'role_id'=> 2,
                 'jml_pinjam' => '2',
             ],
             [
@@ -28,8 +30,10 @@ class AnggotaSeeder extends Seeder
                 'jk' => 'L',
                 'alamat' => 'TASIKMALAYA',
                 'status' => 'AKTIF',
+                'role_id'=> 2,
                 'jml_pinjam' => '5',
             ]
         ]);
     }
+    
 }

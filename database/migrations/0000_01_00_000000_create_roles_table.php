@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('anggota', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('kd_anggota');
-            $table->string('nm_anggota');
-            $table->string('jk');
-            $table->text('alamat');
-            $table->string('status');
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->string('jml_pinjam');
+            $table->string('role_name');
             $table->timestamps();
         });
     }
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('anggota');
+        Schema::dropIfExists('roles');
     }
 };

@@ -16,20 +16,22 @@ class TrsKembaliController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $data = Trskembali::all();
-        $anggota = Anggota::all();
-        $koleksi = Koleksi::all();
+{
+    $data = Trskembali::paginate(10);  // pagination 10 per halaman
+    $anggota = Anggota::all();
+    $koleksi = Koleksi::all();
 
-        $kebijakan = Kebijakan::first();
-        $max_wkt_pjm = $kebijakan->max_wkt_pjm;
-        return view('transaksi.kembali.index')->with([
-            'data' => $data,
-            'anggota' => $anggota,
-            'koleksi' => $koleksi,
-            'max_wkt_pjm' => $max_wkt_pjm,
-        ]);
-    }
+    $kebijakan = Kebijakan::first();
+    $max_wkt_pjm = $kebijakan->max_wkt_pjm;
+
+    return view('transaksi.kembali.index')->with([
+        'data' => $data,
+        'anggota' => $anggota,
+        'koleksi' => $koleksi,
+        'max_wkt_pjm' => $max_wkt_pjm,
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.

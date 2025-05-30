@@ -1,229 +1,197 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('koleksi') }}
+            {{ __('Koleksi') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 bg-gray-50 dark:bg-gray-900">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="px-4 py-4 flex justify-between items-center">
-                    <div>Data koleksi</div>
-                    <button onclick="return addData()">Tambah koleksi</button>
+            <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
+                <div class="flex justify-between items-center px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-wide">Data Koleksi</h3>
+                    <button onclick="return addData()"
+                        class="bg-[#5A827E] hover:bg-[#A4C494] text-gray-200 font-medium px-5 py-2 shadow-md transition duration-300">
+                        Tambah Koleksi
+                    </button>
                 </div>
-                <div class="px-6 text-gray-900 dark:text-gray-100">
-                    <table id="myDataTable" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
+                <form method="GET" action="{{ route('koleksi.index') }}" class="px-6 py-4 flex justify-end">
+                    <input type="text" id="search-input" name="search" value="{{ request('search') }}"
+                        placeholder="Cari judul atau pengarang..."
+                        class="border border-gray-300  px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" />
+                    <button type="submit"
+                        class="bg-[#B9D4AA] hover:bg-[#A4C494] text-gray-800 font-medium px-4 py-2  transition duration-300">
+                        Cari
+                    </button>
+                </form>
+
+                <div class="overflow-x-auto mx-auto" style="max-width: 95%; margin-top: 1rem;">
+                    <table
+                        class="min-w-full table-auto border border-gray-300 dark:border-gray-600 text-sm text-gray-800 dark:text-gray-200 overflow-hidden">
+                        <thead style="background-color: #5A827E;" class="text-white">
                             <tr>
-                                <th>No</th>
-                                <th>Kode</th>
-                                <th>Judul</th>
-                                <th>Pengarang</th>
-                                <th>Penerbit</th>
-                                <th>Tahun</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
+                                <th class="px-4 py-2 border border-gray-300 dark:border-gray-600 ">No</th>
+                                <th class="px-4 py-2 border border-gray-300 dark:border-gray-600">Kode</th>
+                                <th class="px-4 py-2 border border-gray-300 dark:border-gray-600">Judul</th>
+                                <th class="px-4 py-2 border border-gray-300 dark:border-gray-600">Pengarang</th>
+                                <th class="px-4 py-2 border border-gray-300 dark:border-gray-600">Penerbit</th>
+                                <th
+                                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-center ">
+                                    Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $no = 1;
-                            @endphp
-                            @forelse ($data as $d)
-                                <tr>
-                                    <td>{{ $no++ }}</td>
-                                    <td>{{ $d->kd_koleksi }}</td>
-                                    <td>{{ $d->judul }}</td>
-                                    <td>{{ $d->pengarang }}</td>
-                                    <td>{{ $d->penerbit }}</td>
-                                    <td>{{ $d->tahun }}</td>
-                                    <td>{{ $d->status }}</td>
-                                    <td>
+                            @php $no = ($data->currentPage() - 1) * $data->perPage() + 1; @endphp
+                            @forelse ($data as $item)
+                                <tr class="hover:bg-[#B9D4AA] transition duration-150">
+                                    <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">{{ $no++ }}</td>
+                                    <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">
+                                        {{ $item->kd_koleksi }}</td>
+                                    <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">{{ $item->judul }}
+                                    </td>
+                                    <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">{{ $item->pengarang }}
+                                    </td>
+                                    <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">{{ $item->penerbit }}
+                                    </td>
+                                    <td class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-center space-x-2">
                                         <button
-                                            onclick="return updateData('{{ $d->id }}','{{ $d->judul }}','{{ $d->pengarang }}','{{ $d->penerbit }}','{{ $d->tahun }}','{{ $d->status }}','{{ route('koleksi.update', $d->id) }}')">Edit</button>
+                                            onclick="return updateData('{{ $item->id }}','{{ $item->judul }}','{{ $item->pengarang }}','{{ $item->penerbit }}','{{ $item->jumlah }}','{{ route('koleksi.update', $item->id) }}')"
+                                            class="text-yellow-500 hover:text-yellow-600 transition">
+                                            ✏️
+                                        </button>
                                         <button
-                                            onclick="return deleteData('{{ $d->id }}','{{ $d->judul }}', '{{ route('koleksi.destroy', $d->id) }}')">Hapus</button>
+                                            onclick="return deleteData('{{ $item->id }}','{{ $item->judul }}','{{ route('koleksi.destroy', $item->id) }}')"
+                                            class="text-red-600 hover:text-red-700 transition">
+                                            ❌
+                                        </button>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td>Data Not Found</td>
+                                    <td colspan="7"
+                                        class="text-center text-gray-500 italic border border-gray-300 dark:border-gray-600 py-3">
+                                        Data tidak ditemukan</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="px-6 py-4">
+                        {{ $data->links() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- MODAL ADD DATA --}}
-    <div id="modal-addData" class="hidden fixed inset-0 flex justify-center items-center m-4">
-        <div class="bg-white rounded-lg p-6 lg:w-4/12 w-full shadow-xl">
-            <h2 class="text-lg font-bold mb-4 bg-amber-100 p-2 rounded-xl">Add koleksi</h2>
-            <form id="addForm" action="{{ route('koleksi.store') }}" method="post" class="w-full">
+    {{-- Modal Tambah --}}
+    <div id="modal-addData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl">
+            <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">Tambah Koleksi</h2>
+            <form id="addForm" action="{{ route('koleksi.store') }}" method="post">
                 @csrf
-                <p id="modal-content"></p>
-                <button type="submit" id="submitAdd" class="mt-4 bg-sky-500 text-white px-4 py-2 rounded">
-                    Simpan
-                </button>
-                <button type="button" onclick="closeModalAdd(event)"
-                    class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
-                    Tutup
-                </button>
+                <label>Kode Koleksi</label>
+                <input type="text" name="kd_koleksi" class="input w-full mb-2" value="{{ $codeData }}" readonly />
+                <label>Judul</label>
+                <input type="text" name="judul" class="input w-full mb-2" required />
+                <label>Pengarang</label>
+                <input type="text" name="pengarang" class="input w-full mb-2" required />
+                <label>Penerbit</label>
+                <input type="text" name="penerbit" class="input w-full mb-2" required />
+                <label>Jumlah</label>
+                <input type="number" name="jumlah" class="input w-full mb-2" required />
+                <div class="mt-4 flex justify-end gap-2">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 pan</button>
+                    <button type="button" onclick="closeModalAdd()"
+                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 up</button>
+                </div>
             </form>
         </div>
     </div>
 
-    {{-- MODAL UPDATE DATA --}}
-    <div id="modal-updateData" class="hidden fixed inset-0 flex justify-center items-center m-4">
-        <div class="bg-white rounded-lg p-6 lg:w-4/12 w-full shadow-xl">
-            <h2 class="text-lg font-bold mb-4 bg-amber-100 p-2 rounded-xl">Update koleksi</h2>
-            <form id="updateForm" action="" method="post" class="w-full">
+    {{-- Modal Update --}}
+    <div id="modal-updateData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl">
+            <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">Update Koleksi</h2>
+            <form id="updateForm" method="post">
                 @csrf
                 @method('PATCH')
-                <p id="modal-content-update"></p>
-                <button type="submit" id="submitUpdate" class="mt-4 bg-sky-500 text-white px-4 py-2 rounded">
-                    Simpan
-                </button>
-                <button type="button" onclick="closeModalUpdate(event)"
-                    class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
-                    Tutup
-                </button>
+                <div id="modal-content-update"></div>
+                <div class="mt-4 flex justify-end gap-2">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 pan</button>
+                    <button type="button" onclick="closeModalUpdate(event)"
+                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 up</button>
+                </div>
             </form>
         </div>
     </div>
 
-    {{-- MODAL DELETE DATA --}}
-    <div id="modal-deleteData" class="hidden fixed inset-0 flex justify-center items-center m-4 bg-black/30 z-50">
-        <div class="bg-white rounded-lg p-6 lg:w-4/12 w-full shadow-xl">
-            <h2 class="text-lg font-bold mb-4 text-red-600">Konfirmasi Hapus</h2>
-            <form id="deleteForm" action="" method="post" class="w-full">
+    {{-- Modal Delete --}}
+    <div id="modal-deleteData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl">
+            <h2 class="text-lg font-bold text-red-600 mb-4">Konfirmasi Hapus</h2>
+            <form id="deleteForm" method="post">
                 @csrf
                 @method('DELETE')
-                <p id="delete-message" class="mb-4 text-gray-800"></p>
+                <p id="delete-message" class="mb-4 text-gray-800 dark:text-gray-100"></p>
                 <div class="flex justify-end gap-2">
-                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Hapus</button>
+                    <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 us</button>
                     <button type="button" onclick="closeModalDelete()"
-                        class="bg-gray-400 text-white px-4 py-2 rounded">
-                        Batal
-                    </button>
+                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 al</button>
                 </div>
             </form>
         </div>
     </div>
 
-
-    {{-- KODE DATA --}}
-    <script>
-        const kodekoleksiBaru = @json($codeData);
-    </script>
-
-    {{-- SCRIPT MODAL ADD --}}
+    {{-- JavaScript --}}
     <script>
         function addData() {
-            const modalContent = document.getElementById("modal-content");
-            modalContent.innerHTML = `
-                <div class="lg:mb-5 mb-2 w-full">
-                    <label for="kd_koleksi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode koleksi</label>
-                    <input type="text" id="kd_koleksi" name="kd_koleksi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="${kodekoleksiBaru}" />
-                </div>
-                <div class="lg:mb-5 mb-2 w-full">
-                    <label for="judul" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Judul</label>
-                    <input type="text" id="judul" name="judul" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
-                </div>
-                <div class="lg:mb-5 mb-2 w-full">
-                    <label for="pengarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pengarang</label>
-                    <input type="text" id="pengarang" name="pengarang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
-                </div>
-                <div class="lg:mb-5 mb-2 w-full">
-                    <label for="penerbit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Penerbit</label>
-                    <input type="text" id="penerbit" name="penerbit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
-                </div>
-                <div class="lg:mb-5 mb-2 w-full">
-                    <label for="tahun" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tahun</label>
-                    <input type="text" id="tahun" name="tahun" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
-                </div>
-                <div class="lg:mb-5 mb-2 w-full">
-                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status <span class="text-red-500">*</span></label>
-                    <select id="status" class="form-control lg:w-[387px] w-[280px]" name="status"data-placeholder="Pilih Status">
-                        <option value="">Pilih...</option>
-                        <option value="TERSEDIA">TERSEDIA</option>
-                        <option value="TIDAK TERSEDIA">TIDAK TERSEDIA</option>
-                    </select>
-                </div>
-            `;
-            const modal = document.getElementById("modal-addData");
-            modal.classList.remove("hidden");
+            document.getElementById("modal-addData").classList.remove("hidden");
         }
 
         function closeModalAdd() {
-            const modal = document.getElementById("modal-addData");
-            modal.classList.add("hidden");
+            document.getElementById("modal-addData").classList.add("hidden");
         }
-    </script>
 
-    {{-- SCRIPT MODAL UPDATE --}}
-    <script>
-        function updateData(id, judul, pengarang, penerbit, tahun, status, routeUrl) {
-            const modal = document.getElementById("modal-updateData");
-            modal.classList.remove("hidden");
-
-            const modalContent = document.getElementById("modal-content-update");
-            modalContent.innerHTML = `
-            <div class="lg:mb-5 mb-2 w-full">
-                <label for="judul" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Judul</label>
-                <input type="text" id="judul" name="judul" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500dark:focus:border-blue-500" value="${judul}" />
-            </div>
-            <div class="lg:mb-5 mb-2 w-full">
-                <label for="pengarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pengarang</label>
-                <input type="text" id="pengarang" name="pengarang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500dark:focus:border-blue-500" value="${pengarang}" />
-            </div>
-            <div class="lg:mb-5 mb-2 w-full">
-                <label for="penerbit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Penerbit</label>
-                <input type="text" id="penerbit" name="penerbit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500dark:focus:border-blue-500" value="${penerbit}" />
-            </div>
-            <div class="lg:mb-5 mb-2 w-full">
-                <label for="tahun" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tahun</label>
-                <input type="text" id="tahun" name="tahun" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500dark:focus:border-blue-500" value="${tahun}" />
-            </div>
-            <div class="mb-4 w-full">
-                <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
-                <select id="status" name="status" class="form-control w-full">
-                    <option value="">Pilih...</option>
-                    <option value="TERSEDIA" ${status === 'TERSEDIA' ? 'selected' : ''}>TERSEDIA</option>
-                    <option value="TIDAK TERSEDIA" ${status === 'TIDAK TERSEDIA' ? 'selected' : ''}>TIDAK TERSEDIA</option>
-                </select>
-            </div>
-        `;
+        function updateData(id, judul, pengarang, penerbit, jumlah, routeUrl) {
+            document.getElementById("modal-content-update").innerHTML = `
+                <label>Judul</label>
+                <input type="text" name="judul" class="input w-full mb-2" value="${judul}" required />
+                <label>Pengarang</label>
+                <input type="text" name="pengarang" class="input w-full mb-2" value="${pengarang}" required />
+                <label>Penerbit</label>
+                <input type="text" name="penerbit" class="input w-full mb-2" value="${penerbit}" required />
+                <label>Jumlah</label>
+                <input type="number" name="jumlah" class="input w-full mb-2" value="${jumlah}" required />
+            `;
             const updateForm = document.getElementById("updateForm");
             updateForm.action = routeUrl;
+            document.getElementById("modal-updateData").classList.remove("hidden");
         }
 
         function closeModalUpdate(event) {
             event.preventDefault();
             document.getElementById("modal-updateData").classList.add("hidden");
         }
-    </script>
 
-    {{-- SCRIPT MODAL DELETE --}}
-    <script>
         function deleteData(id, judul, routeUrl) {
-            const modal = document.getElementById("modal-deleteData");
-            modal.classList.remove("hidden");
-
-            const message = document.getElementById("delete-message");
-            message.textContent = `Apakah kamu yakin ingin menghapus koleksi dengan judul "${judul}"?`;
-
+            document.getElementById("delete-message").textContent = `Apakah Anda yakin ingin menghapus koleksi "${judul}"?`;
             const deleteForm = document.getElementById("deleteForm");
             deleteForm.action = routeUrl;
+            document.getElementById("modal-deleteData").classList.remove("hidden");
         }
 
         function closeModalDelete() {
             document.getElementById("modal-deleteData").classList.add("hidden");
         }
+
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', function () {
+            if (this.value.trim() === '') {
+                window.location.href = "{{ route('koleksi.index') }}";
+            }
+        });
     </script>
-
-
 </x-app-layout>

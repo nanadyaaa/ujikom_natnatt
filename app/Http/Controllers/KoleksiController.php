@@ -10,15 +10,27 @@ class KoleksiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $data = Koleksi::all();
-        $codeData = Koleksi::createCode();
-        return view('koleksi.index')->with([
-            'data' => $data,
-            'codeData' => $codeData,
-        ]);
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+
+    $query = Koleksi::query();
+
+    if ($search) {
+        $query->where('judul', 'like', "%{$search}%")
+              ->orWhere('pengarang', 'like', "%{$search}%");
     }
+
+    $data = $query->paginate(10);
+
+    $codeData = Koleksi::createCode();
+
+    return view('koleksi.index')->with([
+        'data' => $data,
+        'codeData' => $codeData,
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.

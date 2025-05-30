@@ -12,7 +12,7 @@ class KebijakanController extends Controller
      */
     public function index()
     {
-        $data = Kebijakan::all();
+        $data = Kebijakan::paginate(10); // 10 data per halaman, sesuaikan sesuai kebutuhan
         return view('kebijakan.index')->with([
             'data' => $data,
         ]);

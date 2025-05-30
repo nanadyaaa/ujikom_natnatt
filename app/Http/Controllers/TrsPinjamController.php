@@ -15,20 +15,22 @@ class TrsPinjamController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $data = TrsPinjam::all();
-        $anggota = Anggota::all();
-        $koleksi = Koleksi::all();
+{
+    $data = TrsPinjam::paginate(10);  // paginate 10 per halaman
+    $anggota = Anggota::all();
+    $koleksi = Koleksi::all();
 
-        $kebijakan = Kebijakan::first();
-        $max_wkt_pjm = $kebijakan->max_wkt_pjm;
-        return view('transaksi.pinjam.index')->with([
-            'data' => $data,
-            'anggota' => $anggota,
-            'koleksi' => $koleksi,
-            'max_wkt_pjm' => $max_wkt_pjm,
-        ]);
-    }
+    $kebijakan = Kebijakan::first();
+    $max_wkt_pjm = $kebijakan->max_wkt_pjm;
+
+    return view('transaksi.pinjam.index')->with([
+        'data' => $data,
+        'anggota' => $anggota,
+        'koleksi' => $koleksi,
+        'max_wkt_pjm' => $max_wkt_pjm,
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
