@@ -27,8 +27,9 @@
                                 <th class="border border-[#5A827E] px-3 py-2 text-left">Batas Pinjam</th>
                                 <th class="border border-[#5A827E] px-3 py-2 text-left">Kode Koleksi</th>
                                 <th class="border border-[#5A827E] px-3 py-2 text-left">Judul</th>
+                                {{-- Kolom Status dan Aksi harus selalu ada di tampilan Admin --}}
                                 <th class="border border-[#5A827E] px-3 py-2 text-center">Status</th>
-                                <th class="border border-[#5A827E] px-3 py-2 text-center">Aksi</th>
+
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
@@ -38,28 +39,20 @@
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $no++ }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->no_transaksi_pinjam }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->kd_anggota }}</td>
-                                    <td class="border border-[#cfe2df] px-3 py-2">{{ $d->anggota->nm_anggota }}</td>
+                                    {{-- Menggunakan null coalescing operator untuk mencegah error jika relasi tidak ditemukan --}}
+                                    <td class="border border-[#cfe2df] px-3 py-2">{{ $d->anggota->nm_anggota ?? 'N/A' }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->tg_pinjam }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->tgl_bts_kembali }}</td>
                                     <td class="border border-[#cfe2df] px-3 py-2">{{ $d->kd_koleksi }}</td>
-                                    <td class="border border-[#cfe2df] px-3 py-2">{{ $d->koleksi->judul }}</td>
-                                    <td class="border border-[#cfe2df] px-3 py-2">{{ $d->status }}</td>
-                                    <td class="border border-[#cfe2df] px-3 py-2 text-center space-x-2">
-                                        <button
-                                            onclick="updateData('{{ $d->id }}','{{ $d->kd_anggota }}','{{ $d->tg_pinjam }}','{{ $d->tgl_bts_kembali }}','{{ $d->kd_koleksi }}','{{ route('trsPinjam.update', $d->id) }}')"
-                                            class="bg-[#5A827E] hover:bg-[#4b6f6b] text-white px-3 py-1 rounded-md text-sm transition shadow">
-                                            Edit
-                                        </button>
-                                        <button
-                                            onclick="deleteData('{{ $d->id }}','{{ $d->no_transaksi_pinjam }}', '{{ route('trsPinjam.destroy', $d->id) }}')"
-                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition shadow">
-                                            Hapus
-                                        </button>
-                                    </td>
+                                    {{-- Menggunakan null coalescing operator untuk mencegah error jika relasi tidak ditemukan --}}
+                                    <td class="border border-[#cfe2df] px-3 py-2">{{ $d->koleksi->judul ?? 'N/A' }}</td>
+                                    
+                                    
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-4 text-gray-600 dark:text-gray-400">Data Not Found</td>
+                                    {{-- Sesuaikan colspan dengan jumlah kolom total (10 kolom) --}}
+                                    <td colspan="10" class="text-center py-4 text-gray-600 dark:text-gray-400">Data Not Found</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -159,15 +152,6 @@
                         @endforeach
                     </select>
                 </div>
-                <label for="status">Status</label>
-                <div class="relative w-full mb-2">
-                    <select name="status" id="status" required
-                        class="w-full px-4 py-2 rounded-md border border-[#5A827E] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#5A827E] hover:border-[#40615e] hover:bg-[#e6f0ee] dark:hover:bg-[#3b5956] transition">
-                        <option value="">Pilih...</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="APPROVED">Approved</option>
-                    </select>
-                </div>
             `;
             document.getElementById("modal-addData").classList.remove("hidden");
 
@@ -195,39 +179,66 @@
 
     {{-- SCRIPT MODAL UPDATE --}}
     <script>
-        function updateData(id, kd_anggota, tg_pinjam, tgl_bts_kembali, kd_koleksi, routeUrl) {
+        // Tambahkan 'status' sebagai parameter
+        function updateData(id, kd_anggota, tg_pinjam, tgl_bts_kembali, kd_koleksi, status, routeUrl) {
             const modalContent = document.getElementById("modal-content-update");
             modalContent.innerHTML = `
                 <div>
-                    <label for="kd_anggota" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anggota <span class="text-red-500">*</span></label>
-                    <select id="kd_anggota" name="kd_anggota" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <label for="kd_anggota_update" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anggota <span class="text-red-500">*</span></label>
+                    <select id="kd_anggota_update" name="kd_anggota" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         <option value="">Pilih...</option>
                         @foreach ($anggota as $a)
-                            <option value="{{ $a->kd_anggota }}" ${kd_anggota === "{{ $a->kd_anggota }}" ? "selected" : ""}>{{ $a->nm_anggota }}</option>
+                            <option value="{{ $a->kd_anggota }}">{{ $a->nm_anggota }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
-                    <label for="tgl_pinjam" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Pinjam</label>
-                    <input type="date" id="tgl_pinjam" name="tgl_pinjam" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="${tg_pinjam}" />
+                    <label for="tgl_pinjam_update" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Pinjam</label>
+                    <input type="date" id="tgl_pinjam_update" name="tgl_pinjam" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                 </div>
                 <div>
-                    <label for="tgl_bts_kembali" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Batas Kembali</label>
-                    <input type="date" id="tgl_bts_kembali" name="tgl_bts_kembali" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="${tgl_bts_kembali}" />
+                    <label for="tgl_bts_kembali_update" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Batas Kembali</label>
+                    <input type="date" id="tgl_bts_kembali_update" name="tgl_bts_kembali" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                 </div>
                 <div>
-                    <label for="kd_koleksi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Koleksi <span class="text-red-500">*</span></label>
-                    <select id="kd_koleksi" name="kd_koleksi" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <label for="kd_koleksi_update" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Koleksi <span class="text-red-500">*</span></label>
+                    <select id="kd_koleksi_update" name="kd_koleksi" class="w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         <option value="">Pilih...</option>
                         @foreach ($koleksi as $k)
-                            <option value="{{ $k->kd_koleksi }}" ${kd_koleksi === "{{ $k->kd_koleksi }}" ? "selected" : ""}>{{ $k->judul }}</option>
+                            <option value="{{ $k->kd_koleksi }}">{{ $k->judul }}</option>
                         @endforeach
                     </select>
                 </div>
+
             `;
+            
+            // Set values after elements are created
+            document.getElementById('kd_anggota_update').value = kd_anggota;
+            document.getElementById('tgl_pinjam_update').value = tg_pinjam;
+            document.getElementById('tgl_bts_kembali_update').value = tgl_bts_kembali;
+            document.getElementById('kd_koleksi_update').value = kd_koleksi;
+            document.getElementById('status_update').value = status; // Set nilai status
+
             const updateForm = document.getElementById("updateForm");
             updateForm.action = routeUrl;
             document.getElementById("modal-updateData").classList.remove("hidden");
+
+            // Re-attach event listener for tgl_pinjam_update if needed for max_wkt_pjm calculation
+            const maxBatasPinjam = @json($max_wkt_pjm);
+            const inputTglPinjamUpdate = document.getElementById('tgl_pinjam_update');
+            const inputTglBtsKembaliUpdate = document.getElementById('tgl_bts_kembali_update');
+
+            inputTglPinjamUpdate.addEventListener('change', function () {
+                const tglPinjam = new Date(this.value);
+                if (isNaN(tglPinjam)) return;
+
+                tglPinjam.setDate(tglPinjam.getDate() + maxBatasPinjam);
+
+                const yyyy = tglPinjam.getFullYear();
+                const mm = String(tglPinjam.getMonth() + 1).padStart(2, '0');
+                const dd = String(tglPinjam.getDate()).padStart(2, '0');
+                inputTglBtsKembaliUpdate.value = `${yyyy}-${mm}-${dd}`;
+            });
         }
 
         function closeModalUpdate(e) {
@@ -250,3 +261,6 @@
         }
     </script>
 </x-app-layout>
+```
+
+**Setelah Anda melakukan langkah `dd($data->toArray());` dan melaporkan hasilnya, kita bisa melanjutkan untuk menyelesaikan masalah ini sepenuhnya

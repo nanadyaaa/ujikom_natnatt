@@ -6,7 +6,7 @@ use App\Models\Anggota;
 use App\Models\Kebijakan;
 use App\Models\Koleksi;
 use App\Models\Trskembali;
-use App\Models\TrsPinjam;
+use App\Models\TrsPinjam; // Pastikan ini digunakan jika ada relasi atau logika terkait
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,21 +16,22 @@ class TrsKembaliController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    $data = Trskembali::paginate(10);  // pagination 10 per halaman
-    $anggota = Anggota::all();
-    $koleksi = Koleksi::all();
+    {
+        $data = Trskembali::paginate(10); // pagination 10 per halaman
+        $anggota = Anggota::all();
+        $koleksi = Koleksi::all();
 
-    $kebijakan = Kebijakan::first();
-    $max_wkt_pjm = $kebijakan->max_wkt_pjm;
+        // Pastikan ada data kebijakan sebelum mencoba mengakses propertinya
+        $kebijakan = Kebijakan::first();
+        $max_wkt_pjm = $kebijakan ? $kebijakan->max_wkt_pjm : null; // Tambahkan null check
 
-    return view('transaksi.kembali.index')->with([
-        'data' => $data,
-        'anggota' => $anggota,
-        'koleksi' => $koleksi,
-        'max_wkt_pjm' => $max_wkt_pjm,
-    ]);
-}
+        return view('transaksi.kembali.index')->with([
+            'data' => $data,
+            'anggota' => $anggota,
+            'koleksi' => $koleksi,
+            'max_wkt_pjm' => $max_wkt_pjm,
+        ]);
+    }
 
 
     /**
@@ -50,9 +51,10 @@ class TrsKembaliController extends Controller
         $data = [
             'no_transaksi_kembali' => $no_transaksi_kembali,
             'kd_anggota' => $request->input('kd_anggota'),
-            'tg_pinjam' => $request->input('tgl_pinjam'),
-            'tg_bts_kembali' => $request->input('tgl_bts_kembali'),
-            'tg_kembali' => $request->input('tgl_kembali'),
+            // Perbaikan: Sesuaikan nama input dengan yang ada di HTML/JS
+            'tg_pinjam' => $request->input('tg_pinjam'),
+            'tg_bts_kembali' => $request->input('tg_bts_kembali'),
+            'tg_kembali' => $request->input('tg_kembali'),
             'kd_koleksi' => $request->input('kd_koleksi'),
             'denda' => $request->input('denda'),
             'ket' => $request->input('ket'),
@@ -85,9 +87,10 @@ class TrsKembaliController extends Controller
     {
         $data = [
             'kd_anggota' => $request->input('kd_anggota'),
-            'tg_pinjam' => $request->input('tgl_pinjam'),
-            'tg_bts_kembali' => $request->input('tgl_bts_kembali'),
-            'tg_kembali' => $request->input('tgl_kembali'),
+            // Perbaikan: Sesuaikan nama input dengan yang ada di HTML/JS
+            'tg_pinjam' => $request->input('tg_pinjam'),
+            'tg_bts_kembali' => $request->input('tg_bts_kembali'),
+            'tg_kembali' => $request->input('tg_kembali'),
             'kd_koleksi' => $request->input('kd_koleksi'),
             'denda' => $request->input('denda'),
             'ket' => $request->input('ket'),
@@ -108,7 +111,7 @@ class TrsKembaliController extends Controller
 
         $koleksi = Koleksi::where('kd_koleksi', $kdKoleksi)->first();
         if($koleksi){
-            $koleksi->status = 'TERSEDIA';
+            $koleksi->status = 'TERSEDIA'; // Asumsi 'TERSEDIA' adalah status yang benar
             $koleksi->save();
         }
 

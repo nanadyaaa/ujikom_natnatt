@@ -32,16 +32,14 @@
                         class="min-w-full table-auto border border-gray-300 dark:border-gray-600 text-sm text-gray-800 dark:text-gray-200 overflow-hidden">
                         <thead style="background-color: #5A827E;" class="text-white">
                             <tr>
-                                <th
-                                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-left ">
+                                <th class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-left ">
                                     No</th>
                                 <th class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-left">Maximal
                                     Waktu Pinjam</th>
                                 <th class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-left">Maximal
                                     Jumlah Koleksi</th>
                                 <th class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-left">Denda</th>
-                                <th
-                                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-center">
+                                <th class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-center">
                                     Aksi</th>
                             </tr>
                         </thead>
@@ -53,7 +51,8 @@
                                     <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">{{ $d->max_wkt_pjm }}
                                     </td>
                                     <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">
-                                        {{ $d->max_jml_koleksi }}</td>
+                                        {{ $d->max_jml_koleksi }}
+                                    </td>
                                     <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">{{ $d->denda }}</td>
                                     <td class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-center space-x-2">
                                         <button
@@ -62,7 +61,7 @@
                                             ✏️
                                         </button>
                                         <button
-                                            onclick="return deleteData('{{ $d->id }}','{{ route('kebijakan.destroy', $d->id) }}')"
+                                            onclick="return deleteData('{{ $d->id }}','{{ $d->max_wkt_pjm }}','{{ $d->max_jml_koleksi }}','{{ $d->denda }}','{{ route('kebijakan.destroy', $d->id) }}')"
                                             class="text-red-600 hover:text-red-700 transition">
                                             ❌
                                         </button>
@@ -88,21 +87,29 @@
 
     {{-- Modal Tambah --}}
     <div id="modal-addData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl">
-            <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">Tambah Kebijakan</h2>
+        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl rounded-xl border border-[#5A827E]">
+            <h2 class="text-xl font-semibold text-[#5A827E] dark:text-green-400 mb-5">Tambah Kebijakan</h2>
             <form id="addForm" action="{{ route('kebijakan.store') }}" method="post">
                 @csrf
-                <label>Maximal Waktu Pinjam</label>
-                <input type="number" name="max_wkt_pjm" class="input w-full mb-2" required />
-                <label>Maximal Jumlah Koleksi</label>
-                <input type="number" name="max_jml_koleksi" class="input w-full mb-2" required />
-                <label>Denda</label>
-                <input type="number" name="denda" class="input w-full mb-2" required />
-                <div class="mt-4 flex justify-end gap-2">
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Maximal Waktu Pinjam
+                    (hari)</label>
+                <input type="number" name="max_wkt_pjm"
+                    class="input w-full mb-2 border border-gray-300 dark:bg-gray-700 dark:text-white rounded-md p-2"
+                    required />
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Maximal Jumlah
+                    Koleksi</label>
+                <input type="number" name="max_jml_koleksi"
+                    class="input w-full mb-2 border border-gray-300 dark:bg-gray-700 dark:text-white rounded-md p-2"
+                    required />
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Denda (per hari)</label>
+                <input type="number" name="denda"
+                    class="input w-full mb-2 border border-gray-300 dark:bg-gray-700 dark:text-white rounded-md p-2"
+                    required />
+                <div class="mt-4 flex justify-end gap-3">
                     <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
+                        class="bg-[#5A827E] hover:bg-[#4b6f6b] text-white px-5 py-2 rounded-md font-medium transition-shadow shadow-sm">Simpan</button>
                     <button type="button" onclick="closeModalAdd()"
-                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Tutup</button>
+                        class="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-md font-medium transition-shadow shadow-sm">Tutup</button>
                 </div>
             </form>
         </div>
@@ -110,23 +117,30 @@
 
     {{-- Modal Update --}}
     <div id="modal-updateData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl">
-            <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">Update Kebijakan</h2>
+        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl rounded-xl border border-[#5A827E]">
+            <h2 class="text-xl font-semibold text-[#5A827E] dark:text-green-400 mb-5">Update Kebijakan</h2>
             <form id="updateForm" method="post">
                 @csrf
                 @method('PATCH')
-                <label>Maximal Waktu Pinjam</label>
-                <input type="number" name="max_wkt_pjm" id="update_max_wkt_pjm" class="input w-full mb-2" required />
-                <label>Maximal Jumlah Koleksi</label>
-                <input type="number" name="max_jml_koleksi" id="update_max_jml_koleksi" class="input w-full mb-2"
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Maximal Waktu Pinjam
+                    (hari)</label>
+                <input type="number" name="max_wkt_pjm" id="update_max_wkt_pjm"
+                    class="input w-full mb-2 border border-gray-300 dark:bg-gray-700 dark:text-white rounded-md p-2"
                     required />
-                <label>Denda</label>
-                <input type="number" name="denda" id="update_denda" class="input w-full mb-2" required />
-                <div class="mt-4 flex justify-end gap-2">
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Maximal Jumlah
+                    Koleksi</label>
+                <input type="number" name="max_jml_koleksi" id="update_max_jml_koleksi"
+                    class="input w-full mb-2 border border-gray-300 dark:bg-gray-700 dark:text-white rounded-md p-2"
+                    required />
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Denda (per hari)</label>
+                <input type="number" name="denda" id="update_denda"
+                    class="input w-full mb-2 border border-gray-300 dark:bg-gray-700 dark:text-white rounded-md p-2"
+                    required />
+                <div class="mt-4 flex justify-end gap-3">
                     <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
+                        class="bg-[#5A827E] hover:bg-[#4b6f6b] text-white px-5 py-2 rounded-md font-medium transition-shadow shadow-sm">Simpan</button>
                     <button type="button" onclick="closeModalUpdate(event)"
-                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Tutup</button>
+                        class="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-md font-medium transition-shadow shadow-sm">Tutup</button>
                 </div>
             </form>
         </div>
@@ -134,17 +148,17 @@
 
     {{-- Modal Delete --}}
     <div id="modal-deleteData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl">
-            <h2 class="text-lg font-bold text-red-600 mb-4">Konfirmasi Hapus</h2>
+        <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl rounded-xl border border-[#5A827E]">
+            <h2 class="text-xl font-semibold text-red-600 mb-5">Konfirmasi Hapus</h2>
             <form id="deleteForm" method="post">
                 @csrf
                 @method('DELETE')
                 <p id="delete-message" class="mb-4 text-gray-800 dark:text-gray-100"></p>
-                <div class="flex justify-end gap-2">
+                <div class="flex justify-end gap-3">
                     <button type="submit"
-                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Hapus</button>
+                        class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md font-medium transition-shadow shadow-sm">Hapus</button>
                     <button type="button" onclick="closeModalDelete()"
-                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Batal</button>
+                        class="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-md font-medium transition-shadow shadow-sm">Batal</button>
                 </div>
             </form>
         </div>
@@ -153,6 +167,7 @@
     {{-- JavaScript --}}
     <script>
         function addData() {
+            // Mengosongkan form saat modal tambah dibuka
             document.getElementById("addForm").reset();
             document.getElementById("modal-addData").classList.remove("hidden");
         }
@@ -162,11 +177,13 @@
         }
 
         function updateData(id, maxWkt, maxJml, denda, routeUrl) {
+            // Mengisi form update dengan data yang ada
             document.getElementById("update_max_wkt_pjm").value = maxWkt;
             document.getElementById("update_max_jml_koleksi").value = maxJml;
             document.getElementById("update_denda").value = denda;
+
             const updateForm = document.getElementById("updateForm");
-            updateForm.action = routeUrl;
+            updateForm.action = routeUrl; // Menetapkan action URL untuk form update
             document.getElementById("modal-updateData").classList.remove("hidden");
         }
 
@@ -175,10 +192,12 @@
             document.getElementById("modal-updateData").classList.add("hidden");
         }
 
-        function deleteData(id, routeUrl) {
+        function deleteData(id, maxWkt, maxJml, denda, routeUrl) {
             const deleteForm = document.getElementById("deleteForm");
-            deleteForm.action = routeUrl;
-            document.getElementById("delete-message").innerText = "Yakin ingin menghapus data kebijakan nomor " + id + "?";
+            deleteForm.action = routeUrl; // Menetapkan action URL untuk form delete
+            const deleteMessage = document.getElementById("delete-message");
+            // Pesan konfirmasi yang lebih informatif
+            deleteMessage.innerText = `Apakah Anda yakin ingin menghapus kebijakan dengan batas waktu pinjam ${maxWkt} hari, maksimal koleksi ${maxJml}, dan denda ${denda}? Data yang dihapus tidak dapat dikembalikan.`;
             document.getElementById("modal-deleteData").classList.remove("hidden");
         }
 
