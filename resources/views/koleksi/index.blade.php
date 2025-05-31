@@ -83,9 +83,6 @@
         </div>
     </div>
 
-    ---
-
-    ## Modal Tambah Koleksi
 
     <div id="modal-addData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
         <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl rounded-xl border border-[#5A827E]">
@@ -122,9 +119,6 @@
         </div>
     </div>
 
-    ---
-
-    ## Modal Update Koleksi
 
     <div id="modal-updateData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
         <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl rounded-xl border border-[#5A827E]">
@@ -158,9 +152,6 @@
         </div>
     </div>
 
-    ---
-
-    ## Modal Hapus Koleksi
 
     <div id="modal-deleteData" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
         <div class="bg-white dark:bg-gray-900 p-6 w-full max-w-md shadow-xl rounded-xl border border-[#5A827E]">
@@ -179,9 +170,6 @@
         </div>
     </div>
 
-    ---
-
-    ## JavaScript untuk Interaksi Modal dan Pencarian
 
     <script>
         function addData() {

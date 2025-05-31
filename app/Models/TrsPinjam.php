@@ -8,10 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TrsPinjam extends Model
 {
     use HasFactory;
-    // protected $table = 'trs_pinjam'; // Pastikan nama tabel benar
-    protected $primaryKey = 'id'; // Sesuaikan jika primary key bukan 'id'
-    protected $guarded = ['id']; // Atau $fillable jika Anda mendefinisikan secara eksplisit
-
     protected $fillable = [
         'no_transaksi_pinjam',
         'kd_anggota',
